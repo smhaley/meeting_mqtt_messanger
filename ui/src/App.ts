@@ -1,7 +1,7 @@
 import { publishAMessage } from "./MQTTHandler";
 import { AppState } from "./AppState";
 import { ToastTypes } from "./constants/toastTypes";
-import { showToast } from "./toast";
+import { showToast } from "./Toast";
 
 export const App = () => {
   const state = new AppState("ON AIR!!");
@@ -13,7 +13,6 @@ export const App = () => {
   const offButton = document.getElementById("mqttPubOff");
 
   window.addEventListener("load", function () {
-    console.log(state.messageValue);
     inputElement.value = state.messageValue;
     pubButton?.removeAttribute("disabled");
   });
@@ -21,7 +20,6 @@ export const App = () => {
   if (inputElement) {
     inputElement.oninput = (event: Event) => {
       const val = (event.target as HTMLInputElement).value;
-      console.log("===>", state.messageValue, val);
       if (pubButton) {
         val.length < 1
           ? pubButton.setAttribute("disabled", "disabled")
