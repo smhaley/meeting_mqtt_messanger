@@ -2,7 +2,6 @@ from machine import Pin, SPI
 import max7219
 from time import sleep
 import _thread
-import json
 
 class Message_Controller:
     OFF = 'OFF'
