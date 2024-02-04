@@ -2,11 +2,11 @@ from machine import Pin, SPI
 import max7219
 from time import sleep
 import _thread
-
+import json
 
 class Message_Controller:
-    OFF = b'OFF'
-    ON = b'ON'
+    OFF = 'OFF'
+    ON = 'ON'
     
     def __init__(self, msg):
         self.msg=msg
@@ -18,11 +18,16 @@ class Message_Controller:
         
         
     def msg_callback(self, _mqtt_topic, msg):
-        print(msg, Message_Controller.OFF, Message_Controller.ON)
+        payload = eval(msg.decode('utf-8'))
+        status = payload.get("status")
+        message = payload.get("message")
         
-        if (not self.display_status and msg == Message_Controller.ON):
+        if message:
+            self.msg = message
+        
+        if (not self.display_status and status == Message_Controller.ON):
             return self.declare_message()
-        if(self.display_status and msg == Message_Controller.OFF):
+        if(self.display_status and status == Message_Controller.OFF):
             return self.terminate_message()
 
     def terminate_message(self):
