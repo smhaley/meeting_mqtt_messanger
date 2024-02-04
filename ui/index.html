@@ -4,12 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Sample Webpack App</title>
+    <title>Home Notification Manager</title>
   </head>
   <body>
-    <h1>Test file</h1>
-    <button id="mqtt_pub">pub button</button>
-    <script src="/bundle.js"></script>
-    <script></script>
+    <h1>Notification Manager</h1>
+    <div class="messageInput">
+      <label label="message"> Message </label>
+      <input class="text-input" label="message" id="messageInput" type="text" />
+    </div>
+    <div>
+      <button class="secondary-button" id="mqttPubOn" disabled="true">
+        Publish Message
+      </button>
+      <button class="danger-button" id="mqttPubOff">Turn Off Message</button>
+    </div>
+    <div id="toastBox"></div>
   </body>
 </html>

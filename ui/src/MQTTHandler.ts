@@ -1,57 +1,42 @@
-// // Create a client instance
 import * as Paho from "paho-mqtt";
+import * as MQTTConstants from "./constants/mqttConstants";
+
+type ExportMessage = {
+  status: "OFF" | "ON";
+  message?: string;
+};
 
 const client = new Paho.Client(
-  "decentservice.xyz",
-  9001,
-  "client-" + Math.random().toString(36).substr(2, 9) + "-" + Date.now()
+  MQTTConstants.MQTT_CLIENT,
+  MQTTConstants.MQTT_PORT,
+  "client-" + Math.random().toString(36).slice(2, 9) + "-" + Date.now()
 );
 
-
-console.log(client.host, client.isConnected())
-// set callback handlers
-// client.onConnectionLost = onConnectionLost;
 client.onMessageArrived = onMessageArrived;
 
-// connect the client
-// client.connect({ onSuccess: onConnect });
-
 client.connect({
-    userName: "mqtt",
-    password: "mqtt",
-    onSuccess: function () {
-        console.log("connected");
-        onConnect()
-    },
-    onFailure: function (err) {
-        console.log("connect failed: " + err.errorMessage);
-    },
+  userName: MQTTConstants.MQTT_UN,
+  password: MQTTConstants.MQTT_PW,
+  onSuccess: onConnectionSuccess,
+  onFailure: onConnectionFailure,
 });
 
-export const publishAMessage = () => {
-    console.log('ssss')
-    const message = new Paho.Message("Hello");
-    message.destinationName = "World";
-    client.send(message);
-} 
+export const publishAMessage = (msg: ExportMessage) => {
+  const message = new Paho.Message(JSON.stringify(msg));
+  message.destinationName = MQTTConstants.MQTT_TOPIC;
+  client.send(message);
+};
 
-function onConnect() {
-  // Once a connection has been made, make a subscription and send a message.
-  console.log("onConnect");
-  client.subscribe("test");
-//   message = new Paho.MQTT.Message("Hello");
-//   message.destinationName = "World";
-//   client.send(message);
+function onConnectionSuccess() {
+  console.log(
+    `connection established. Pointing to the following Topic: ${MQTTConstants.MQTT_TOPIC}`
+  );
 }
 
-// // called when the client loses its connection
-// function onConnectionLost(responseObject) {
-//   if (responseObject.errorCode !== 0) {
-//     console.log("onConnectionLost:"+responseObject.errorMessage);
-//   }
-// }
+function onConnectionFailure(err: { errorMessage: string }) {
+  console.info("connect failed: " + err.errorMessage);
+}
 
-// // called when a message arrives
 function onMessageArrived(message: any) {
-  console.log("onMessageArrived:"+message.payloadString);
+  console.log("onMessageArrived:" + message.payloadString);
 }

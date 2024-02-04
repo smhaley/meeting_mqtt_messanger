@@ -1,15 +1,4 @@
-// import { MQTTService } from "./MQTTHandler";
-import {publishAMessage} from  "./MQTTHandler";
-// function init() {
-//   const mqtt = new MQTTService();
+import App from "./app";
+import "../public/app.css";
 
-//   const pubButton = document.getElementById("mqtt_pub");
-//   console.log(pubButton);
-//   pubButton?.addEventListener("click", mqtt.publishMessage);
-//   console.log("balh");
-// }
-
-// init();
-const pubButton = document.getElementById("mqtt_pub");
-console.log(pubButton);
-pubButton?.addEventListener("click", publishAMessage)
+App();

@@ -1,0 +1,244 @@
+:root {
+  --font-color: #c1bfbd;
+  --link-color: #0a7dca;
+  --link-hover: #0e9dfc;
+  --link-white-color: #c1bfbd;
+  --icon-hov-color-primary: rgba(255, 255, 255, 0.08);
+  --bg-color: #333;
+  --tooltip-bg: #c1bfbd;
+  --tooltip-color: #333;
+  --bg-secondary: #424242;
+  --table-header: #424242;
+  --pink: #e91e63;
+  --pink-dark: #c21858;
+  --red: #e91e36;
+  --red-dark: #c21826;
+  --red-hov: #ba2c38;
+  --purple-light: #9c2780;
+  --purple: #572780;
+  --purple-hov: #5f3782;
+  --blue: #272a80;
+  --mid-blue: #276880;
+  --mid-blue-hov: #357f99;
+  --light-blue: #57acdc;
+  --light-green: #57dcbe;
+  --green: #60c689;
+  --active-green-tab: #60c689;
+  --disabled: rgba(192, 166, 166, 0.4);
+  --disabled-font: #333;
+  --xxxs: "380px";
+  --xxs: "440px";
+  --xs: "480px";
+  --sm: "768px";
+  --md: "992px";
+  --lg: "1200px";
+  --container-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+  --font: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+
+  font-family: var(--font);
+  scrollbar-color: var(--light-green) var(--bg-color);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--light-green);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--green);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+[data-theme="light"] {
+  --font-color: #333;
+  --link-color: #0a86da;
+  --link-white-color: rgb(0, 100, 200);
+  --bg-color: #f8f8f8;
+  --bg-secondary: #f3f0f0;
+  --icon-hov-color-primary: rgba(0, 0, 0, 0.04);
+  --active-green-tab: #087132;
+  --tooltip-bg: #333;
+  --tooltip-color: #c1bfbd;
+}
+
+html,
+body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-color);
+  color: var(--font-color);
+}
+
+body {
+  margin: 0px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+label {
+  display: block;
+}
+
+input,
+button {
+  font-family: inherit;
+  font-size: inherit;
+  -webkit-padding: 0.4em 0;
+  padding: 0.4em;
+  margin: 0 0 0.5em 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+}
+
+button {
+  padding: 12px 15px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  outline: none;
+  transition: 0.1s ease-in-out;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
+.primary-button {
+  color: #ccc;
+  background-color: var(--purple);
+  border: 1px solid var(--purple);
+}
+
+.primary-button:hover {
+  background-color: var(--purple-hov);
+  border: 1px solid var(--purple);
+}
+
+.primary-button:focus {
+  border: 1px solid var(--purple-light);
+}
+
+.secondary-button {
+  color: #ccc;
+  background-color: var(--mid-blue);
+  border: 1px solid var(--mid-blue);
+}
+
+.secondary-button:hover {
+  background-color: var(--mid-blue-hov);
+  border: 1px solid var(--mid-blue);
+}
+
+.secondary-button:focus {
+  border: 1px solid var(--light-blue);
+}
+
+.danger-button {
+  color: #ccc;
+  background-color: var(--red-dark);
+  border: 1px solid var(--red-dark);
+}
+
+.danger-button:hover {
+  background-color: var(--red-hov);
+  border: 1px solid var(--red-dark);
+}
+
+.danger-button:focus {
+  border: 1px solid var(--red);
+}
+
+.primary-button:disabled,
+.secondary-button:disabled,
+input:disabled {
+  cursor: not-allowed;
+  border: none;
+  background-color: var(--disabled);
+  color: var(--disabled-font);
+}
+
+.error {
+  color: var(--pink);
+  margin: 0px;
+  font-weight: 500;
+  height: 16px;
+}
+
+label {
+  padding-bottom: 8px;
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+.text-input,
+select {
+  background-color: var(--bg);
+  color: var(--font);
+  font-family: inherit;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 3px;
+  height: 50px;
+  font-size: 1.25rem;
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: var(--green);
+}
+
+.err-input {
+  outline: none;
+  border-color: var(--pink);
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+#toastBox {
+  position: absolute;
+  display: flex;
+  bottom: 30px;
+  right: 30px;
+  align-items: flex-end;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.toast {
+  z-index: 10;
+  width: 300px;
+  height: 45px;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin: 16px 0;
+  display: flex;
+  padding: 8px;
+  align-items: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  transform: translateX(100%);
+  animation: moveLeft 0.4s linear forwards;
+}
+
+.cancel-toast {
+  background-color: var(--red-dark);
+}
+.publish-toast {
+  background-color: var(--mid-blue);
+}
+
+@keyframes moveLeft {
+  100% {
+    transform: translateX(0);
+  }
+}
