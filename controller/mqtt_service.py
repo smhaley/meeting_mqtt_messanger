@@ -3,8 +3,6 @@ import time
 from umqtt.simple import MQTTClient
 import ubinascii
 from machine import reset, unique_id, Pin
-import json
-
 
 class SensorToMQTTService:
   def __init__(self, mqtt_topic, secrets, sub_callback):
