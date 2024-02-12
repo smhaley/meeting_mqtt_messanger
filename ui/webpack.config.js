@@ -28,7 +28,7 @@ module.exports = {
   devServer: {
     static: path.join(__dirname, "dist"),
     compress: true,
-    port: 4001,
+    port: 4002,
   },
   plugins: [
     new HtmlWebpackPlugin({

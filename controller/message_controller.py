@@ -2,6 +2,7 @@ from machine import Pin, SPI
 import max7219
 from time import sleep
 import _thread
+import json
 
 class Message_Controller:
     OFF = 'OFF'
@@ -16,11 +17,7 @@ class Message_Controller:
         self.onAir = status.decode("utf-8")        
         
         
-    def msg_callback(self, _mqtt_topic, msg):
-        payload = eval(msg.decode('utf-8'))
-        status = payload.get("status")
-        message = payload.get("message")
-        
+    def msg_callback(self, status, message):
         if message:
             self.msg = message
         
@@ -60,8 +57,3 @@ class Message_Controller:
                 display.show()
                 sleep(0.1)
             self.baton.release()
-                
-
-          
-       
-

@@ -3,10 +3,12 @@ import time
 from umqtt.simple import MQTTClient
 import ubinascii
 from machine import reset, unique_id, Pin
+import json
 
 class SensorToMQTTService:
-  def __init__(self, mqtt_topic, secrets, sub_callback):
+  def __init__(self, mqtt_topic, mqtt_topic_status, secrets, sub_callback):
     self.mqtt_topic = mqtt_topic
+    self.mqtt_topic_status = mqtt_topic_status
     self.secrets = secrets
     self.sub_callback = sub_callback
     self.wlan = self.connect_wlan()
@@ -33,13 +35,27 @@ class SensorToMQTTService:
             password=self.secrets.MQTT_PASSWORD)
     try:
       mqtt_client.connect()
-      mqtt_client.set_callback(self.sub_callback)
+      mqtt_client.set_callback(self.message_callback)
       print('mqtt broker connected')
       return mqtt_client
     except OSError as e:
       self.restart_and_reconnect()
 
-
+  def message_callback(self, mqtt_topic, msg):
+        topic = mqtt_topic.decode('utf-8')
+        payload = eval(msg.decode('utf-8'))
+        status = payload.get("status")
+        message = payload.get("message")
+        
+        if topic == self.mqtt_topic_status:
+            self.handle_status_check(status)
+        else:
+            self.sub_callback(status, message)
+            
+  def handle_status_check(self, status):
+      if status == 'PING':
+          self.mqtt_client.publish(self.mqtt_topic_status, json.dumps({"status":"PONG"}))
+          
   def restart_and_reconnect(self):
     print('Failed to connect to MQTT broker. Reconnecting...')
     self.led.value(0)
@@ -51,12 +67,9 @@ class SensorToMQTTService:
         self.led.value(1)
         while True:
             self.mqtt_client.subscribe(self.mqtt_topic)
+            self.mqtt_client.subscribe(self.mqtt_topic_status)
             time.sleep(1)
               
      except Exception as e:
         print(f'Failed to publish message: {e}')
         self.restart_and_reconnect()
-
-
-
-
