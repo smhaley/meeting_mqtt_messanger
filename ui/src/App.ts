@@ -49,6 +49,7 @@ export default class App {
 
     this.pubButton?.addEventListener("click", () => {
       showToast("Published!", ToastTypes.PUBLISH);
+      this.handlePostSend();
       this.mqttHandshake();
       this.publishMessage(
         {
@@ -61,12 +62,26 @@ export default class App {
 
     this.offButton?.addEventListener("click", () => {
       showToast("Message Canceled!", ToastTypes.CANCEL);
+      this.handlePostSend();
       this.mqttHandshake();
       this.publishMessage(
         { status: MessageStatus.OFF },
         this.handleConnectionError
       );
     });
+  };
+
+  private handlePostSend = () => {
+    if (this.pubButton && this.offButton) {
+      this.pubButton.disabled = true;
+      this.offButton.disabled = true;
+    }
+    setTimeout(() => {
+      if (this.pubButton && this.offButton) {
+        this.pubButton.removeAttribute("disabled");
+        this.offButton.removeAttribute("disabled");
+      }
+    }, 3000);
   };
 
   public handleConnectionError = () => {

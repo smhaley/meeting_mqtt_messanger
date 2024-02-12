@@ -5,7 +5,7 @@ from message_controller import Message_Controller
 
 handler = Message_Controller('')
 MQTT_TOPIC = 'in_meeting'
-MQTT_TOPIC_STATUS = 'mqtt_topic_status'
+MQTT_TOPIC_STATUS = 'in_meeting_status'
     
 if __name__ == '__main__':
     service = SensorToMQTTService(MQTT_TOPIC, MQTT_TOPIC_STATUS, Secrets, handler.msg_callback)
