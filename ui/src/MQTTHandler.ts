@@ -1,6 +1,6 @@
 import * as Paho from "paho-mqtt";
 import * as MQTTConstants from "./constants/mqttConstants";
-import SharedStatusState, { AppStatus } from "./SharedState";
+import SharedStatusState, { AppHandshakeStatus } from "./SharedState";
 import { MessageStatus, MqttStatus } from "./constants/mqttTransfer";
 
 export type ExportMessage = {
@@ -39,7 +39,7 @@ export default class MQTTClient {
   private onConnectionSuccess = () => {
     this.client.subscribe(MQTTConstants.MQTT_STATUS_TOPIC);
     document.dispatchEvent(this.mountEvent);
-    console.log(
+    console.info(
       `Connection established. Pointing to the following Topics: ${MQTTConstants.MQTT_TOPIC}, ${MQTTConstants.MQTT_STATUS_TOPIC}`
     );
   };
@@ -72,7 +72,7 @@ export default class MQTTClient {
   };
 
   onConnectionFailure = (err: { errorCode: number; errorMessage: string }) => {
-    this.sharedStatusState.setStatus(AppStatus.OPEN);
+    this.sharedStatusState.setStatus(AppHandshakeStatus.OPEN);
     console.info("connect failed: " + err.errorMessage);
   };
 
@@ -80,7 +80,7 @@ export default class MQTTClient {
     try {
       const resp = JSON.parse(message.payloadString);
       if (resp.status === MqttStatus.PONG)
-        this.sharedStatusState.setStatus(AppStatus.CLOSED);
+        this.sharedStatusState.setStatus(AppHandshakeStatus.CLOSED);
     } catch {
       console.error(`message parsing error: ${message.payloadString}`);
     }
@@ -90,7 +90,7 @@ export default class MQTTClient {
     errorCode: number;
     errorMessage: string;
   }) => {
-    this.sharedStatusState.setStatus(AppStatus.OPEN);
+    this.sharedStatusState.setStatus(AppHandshakeStatus.OPEN);
     if (responseObject.errorCode !== 0) {
       console.log("onConnectionLost:" + responseObject.errorMessage);
     }

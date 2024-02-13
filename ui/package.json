@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "exit 0",
     "dev": "webpack-dev-server --mode development",
     "build": "webpack --mode production"
   },
@@ -22,7 +21,7 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
-    "mqtt": "^5.3.5",
+    "dotenv-webpack": "^8.0.1",
     "paho-mqtt": "^1.1.0"
   }
 }

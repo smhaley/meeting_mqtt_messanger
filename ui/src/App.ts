@@ -5,11 +5,13 @@ import { MessageStatus } from "./constants/mqttTransfer";
 
 interface AppState {
   messageValue: string;
+  hasError: boolean;
 }
 
 export default class App {
-  private state: AppState = { messageValue: "ON AIR!!" };
+  private state: AppState = { messageValue: "ON AIR!!", hasError: false };
   private mqttHandshake: () => void;
+  private sendTimeoutDuration: number;
 
   private inputElement: HTMLInputElement | null;
   private pubButton: HTMLButtonElement | null;
@@ -24,10 +26,12 @@ export default class App {
 
   constructor(
     publishMessage: (msg: ExportMessage, errorCallback?: () => void) => void,
-    mqttHandshake: () => void
+    mqttHandshake: () => void,
+    sendTimeoutDuration: number
   ) {
     this.publishMessage = publishMessage;
     this.mqttHandshake = mqttHandshake;
+    this.sendTimeoutDuration = sendTimeoutDuration;
 
     this.inputElement = document.getElementById(
       "messageInput"
@@ -48,7 +52,7 @@ export default class App {
     });
 
     this.pubButton?.addEventListener("click", () => {
-      showToast("Published!", ToastTypes.PUBLISH);
+      showToast("Publishing...", ToastTypes.PUBLISH, this.sendTimeoutDuration);
       this.handlePostSend();
       this.mqttHandshake();
       this.publishMessage(
@@ -61,7 +65,11 @@ export default class App {
     });
 
     this.offButton?.addEventListener("click", () => {
-      showToast("Message Canceled!", ToastTypes.CANCEL);
+      showToast(
+        "Cancelling...",
+        ToastTypes.CANCEL,
+        this.sendTimeoutDuration
+      );
       this.handlePostSend();
       this.mqttHandshake();
       this.publishMessage(
@@ -77,14 +85,15 @@ export default class App {
       this.offButton.disabled = true;
     }
     setTimeout(() => {
-      if (this.pubButton && this.offButton) {
+      if (this.pubButton && this.offButton && !this.state.hasError) {
         this.pubButton.removeAttribute("disabled");
         this.offButton.removeAttribute("disabled");
       }
-    }, 3000);
+    }, this.sendTimeoutDuration);
   };
 
   public handleConnectionError = () => {
+    this.state.hasError = true;
     this.banner?.classList.remove("visuallyhidden");
     this.banner?.classList.add("warning-banner");
     this.toastBox?.classList.add("visuallyhidden");

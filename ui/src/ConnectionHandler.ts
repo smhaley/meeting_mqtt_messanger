@@ -1,28 +1,29 @@
-import SharedStatusState, { AppStatus } from "./SharedState";
+import SharedStatusState, { AppHandshakeStatus} from "./SharedState";
 
 export default class ConnectionHandler {
-  private minutes: number;
   private handlePush: () => void;
   private interval: number;
   private sharedStatusState: SharedStatusState;
   private mountEventName: string;
   private mqttConnectionFailure: Event;
+  private handshakeTimeout: number;
 
   constructor(
-    minutes: number,
+    intervalMinutes: number,
+    handshakeTimeout: number,
     sharedStatusState: SharedStatusState,
     mountEventName: string,
     mqttConnectionFailure: Event,
     handlePush: () => void
   ) {
-    this.minutes = minutes;
     this.sharedStatusState = sharedStatusState;
+    this.handshakeTimeout = handshakeTimeout;
     this.mountEventName = mountEventName;
     this.mqttConnectionFailure = mqttConnectionFailure;
     this.handlePush = handlePush;
 
     this.handleMQTTConnection();
-    this.interval = window.setInterval(this.handshake, this.minutes * 60000);
+    this.interval = window.setInterval(this.handshake, intervalMinutes * 60000);
   }
 
   private handleMQTTConnection = () =>
@@ -30,16 +31,16 @@ export default class ConnectionHandler {
 
   public handshake = () => {
     this.handlePush();
-    this.sharedStatusState.setStatus(AppStatus.OPEN);
+    this.sharedStatusState.setStatus(AppHandshakeStatus.OPEN);
     setTimeout(() => {
-      if (this.sharedStatusState.status === AppStatus.OPEN) {
+      if (this.sharedStatusState.status === AppHandshakeStatus.OPEN) {
         document.dispatchEvent(this.mqttConnectionFailure);
         this.cleanup();
       }
-    }, 2000);
+    }, this.handshakeTimeout);
   };
 
-  public closeStatus = () => this.sharedStatusState.setStatus(AppStatus.CLOSED);
+  public closeStatus = () => this.sharedStatusState.setStatus(AppHandshakeStatus.CLOSED);
   private cleanup = () => {
     window.clearInterval(this.interval);
   };

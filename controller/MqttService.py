@@ -5,7 +5,10 @@ import ubinascii
 from machine import reset, unique_id, Pin
 import json
 
-class SensorToMQTTService:
+class MqttService:
+  PING = "PING"
+  PONG = "PONG"
+
   def __init__(self, mqtt_topic, mqtt_topic_status, secrets, sub_callback):
     self.mqtt_topic = mqtt_topic
     self.mqtt_topic_status = mqtt_topic_status
@@ -53,8 +56,8 @@ class SensorToMQTTService:
             self.sub_callback(status, message)
             
   def handle_status_check(self, status):
-      if status == 'PING':
-          self.mqtt_client.publish(self.mqtt_topic_status, json.dumps({"status":"PONG"}))
+      if status == MqttService.PING:
+          self.mqtt_client.publish(self.mqtt_topic_status, json.dumps({"status":MqttService.PONG}))
           
   def restart_and_reconnect(self):
     print('Failed to connect to MQTT broker. Reconnecting...')
@@ -73,3 +76,4 @@ class SensorToMQTTService:
      except Exception as e:
         print(f'Failed to publish message: {e}')
         self.restart_and_reconnect()
+

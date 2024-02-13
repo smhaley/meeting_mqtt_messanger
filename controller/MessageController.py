@@ -2,9 +2,8 @@ from machine import Pin, SPI
 import max7219
 from time import sleep
 import _thread
-import json
 
-class Message_Controller:
+class MessageController:
     OFF = 'OFF'
     ON = 'ON'
     
@@ -21,9 +20,9 @@ class Message_Controller:
         if message:
             self.msg = message
         
-        if (not self.display_status and status == Message_Controller.ON):
+        if (not self.display_status and status == MessageController.ON):
             return self.declare_message()
-        if(self.display_status and status == Message_Controller.OFF):
+        if(self.display_status and status == MessageController.OFF):
             return self.terminate_message()
 
     def terminate_message(self):
