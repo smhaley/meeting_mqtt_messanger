@@ -7,17 +7,25 @@
     <title>Home Notification Manager</title>
   </head>
   <body>
-    <h1>Notification Manager</h1>
-    <div class="messageInput">
-      <label label="message"> Message </label>
-      <input class="text-input" label="message" id="messageInput" type="text" />
-    </div>
-    <div>
-      <button class="secondary-button" id="mqttPubOn" disabled="true">
-        Publish Message
-      </button>
-      <button class="danger-button" id="mqttPubOff">Turn Off Message</button>
-    </div>
-    <div id="toastBox"></div>
+    <div id="banner" class="visuallyhidden">Display not found!</div>
+    <main class="main-container">
+      <h1>Notification Manager</h1>
+      <div class="messageInput">
+        <label label="message"> Message </label>
+        <input
+          class="text-input"
+          label="message"
+          id="messageInput"
+          type="text"
+        />
+      </div>
+      <div>
+        <button class="secondary-button" id="mqttPubOn" disabled="true">
+          Publish Message
+        </button>
+        <button class="danger-button" id="mqttPubOff">Turn Off Message</button>
+      </div>
+      <div id="toastBox"></div>
+    </main>
   </body>
 </html>

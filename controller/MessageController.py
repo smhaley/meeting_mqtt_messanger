@@ -3,7 +3,7 @@ import max7219
 from time import sleep
 import _thread
 
-class Message_Controller:
+class MessageController:
     OFF = 'OFF'
     ON = 'ON'
     
@@ -16,17 +16,13 @@ class Message_Controller:
         self.onAir = status.decode("utf-8")        
         
         
-    def msg_callback(self, _mqtt_topic, msg):
-        payload = eval(msg.decode('utf-8'))
-        status = payload.get("status")
-        message = payload.get("message")
-        
+    def msg_callback(self, status, message):
         if message:
             self.msg = message
         
-        if (not self.display_status and status == Message_Controller.ON):
+        if (not self.display_status and status == MessageController.ON):
             return self.declare_message()
-        if(self.display_status and status == Message_Controller.OFF):
+        if(self.display_status and status == MessageController.OFF):
             return self.terminate_message()
 
     def terminate_message(self):
@@ -60,8 +56,3 @@ class Message_Controller:
                 display.show()
                 sleep(0.1)
             self.baton.release()
-                
-
-          
-       
-

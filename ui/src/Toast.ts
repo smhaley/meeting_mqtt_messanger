@@ -2,7 +2,11 @@ import { ToastTypes } from "./constants/toastTypes";
 
 const toastBox = document.getElementById("toastBox");
 
-export const showToast = (msg: string, toastType: ToastTypes) => {
+export const showToast = (
+  msg: string,
+  toastType: ToastTypes,
+  resetTime: number
+) => {
   const toast = document.createElement("div");
   toast.classList.add("toast");
   toast.classList.add(toastType);
@@ -11,5 +15,5 @@ export const showToast = (msg: string, toastType: ToastTypes) => {
 
   setTimeout(() => {
     toast.remove();
-  }, 3000);
+  }, resetTime);
 };

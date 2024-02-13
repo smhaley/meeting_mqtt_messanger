@@ -1,15 +1,14 @@
 from secrets import Secrets
-from mqtt_service import SensorToMQTTService
-from message_controller import Message_Controller
+from MqttService import MqttService
+from MessageController import MessageController
 
-
-handler = Message_Controller('')
+handler = MessageController('')
 MQTT_TOPIC = 'in_meeting'
+MQTT_TOPIC_STATUS = 'in_meeting_status'
     
 if __name__ == '__main__':
-    service = SensorToMQTTService(MQTT_TOPIC, Secrets, handler.msg_callback)
+    service = MqttService(MQTT_TOPIC, MQTT_TOPIC_STATUS, Secrets, handler.msg_callback)
     service.main()
-
     
 
 

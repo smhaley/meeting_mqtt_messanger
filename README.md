@@ -12,7 +12,7 @@ The project is a simple ui and microcontroller to inform others that you are bus
 
 ### Controller
 
-- [See here](./display/README.md)
+- [See here](./controller/README.md)
 
 ### Global
 
@@ -21,7 +21,7 @@ The project is a simple ui and microcontroller to inform others that you are bus
   - [a simple setup example](https://www.youtube.com/watch?v=juSoczXtlxA)
   - websockets must be enabled to use the UI.
   - Note all code is preconfigured with the assumption that the MQTT websockets are over 9001.
-  - Adjust all Secrets and configs as necessary [controller](./display/secrets.py) and [ui](ui/src/constants/mqttConstants.ts)
+  - Adjust all Secrets and configs as necessary [controller](./controller/secrets.py) and [ui](ui/src/constants/mqttConstants.ts)
 
 ## UI
 
