@@ -3,20 +3,16 @@ import time
 from umqtt.simple import MQTTClient
 import ubinascii
 from machine import reset, unique_id, Pin
-import json
+from controllers.MqttMessageController import MqttMessageController
 
 class MqttService:
-  PING = "PING"
-  PONG = "PONG"
-
-  def __init__(self, mqtt_topic, mqtt_topic_status, secrets, sub_callback):
-    self.mqtt_topic = mqtt_topic
-    self.mqtt_topic_status = mqtt_topic_status
+ 
+  def __init__(self, secrets, mqtt_topics):
     self.secrets = secrets
-    self.sub_callback = sub_callback
     self.wlan = self.connect_wlan()
     self.mqtt_client = self.connect_mqtt()
     self.led = Pin("LED", Pin.OUT)
+    self.mqtt_topics = mqtt_topics
     
   def connect_wlan(self):
     wlan = network.WLAN(network.STA_IF)
@@ -38,27 +34,13 @@ class MqttService:
             password=self.secrets.MQTT_PASSWORD)
     try:
       mqtt_client.connect()
-      mqtt_client.set_callback(self.message_callback)
+      message_controller = MqttMessageController(mqtt_client)
+      mqtt_client.set_callback(message_controller.message_callback)
       print('mqtt broker connected')
       return mqtt_client
     except OSError as e:
       self.restart_and_reconnect()
 
-  def message_callback(self, mqtt_topic, msg):
-        topic = mqtt_topic.decode('utf-8')
-        payload = eval(msg.decode('utf-8'))
-        status = payload.get("status")
-        message = payload.get("message")
-        
-        if topic == self.mqtt_topic_status:
-            self.handle_status_check(status)
-        else:
-            self.sub_callback(status, message)
-            
-  def handle_status_check(self, status):
-      if status == MqttService.PING:
-          self.mqtt_client.publish(self.mqtt_topic_status, json.dumps({"status":MqttService.PONG}))
-          
   def restart_and_reconnect(self):
     print('Failed to connect to MQTT broker. Reconnecting...')
     self.led.value(0)
@@ -69,8 +51,8 @@ class MqttService:
      try:
         self.led.value(1)
         while True:
-            self.mqtt_client.subscribe(self.mqtt_topic)
-            self.mqtt_client.subscribe(self.mqtt_topic_status)
+            self.mqtt_client.subscribe(self.mqtt_topics.MQTT_TOPIC)
+            self.mqtt_client.subscribe(self.mqtt_topics.MQTT_TOPIC_STATUS)
             time.sleep(1)
               
      except Exception as e:
