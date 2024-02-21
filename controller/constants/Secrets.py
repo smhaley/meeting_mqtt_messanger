@@ -5,3 +5,4 @@ class Secrets:
    MQTT_PASSWORD = 'mqtt'
    MQTT_HOST = "decentservice.xyz"
 
+

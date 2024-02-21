@@ -1,11 +1,10 @@
 from machine import Pin, SPI
 import max7219
 from time import sleep
+from constants.MessageStatus import MessageStatus
 import _thread
 
-class MessageController:
-    OFF = 'OFF'
-    ON = 'ON'
+class DisplayController:
     
     def __init__(self, msg):
         self.msg=msg
@@ -16,13 +15,13 @@ class MessageController:
         self.onAir = status.decode("utf-8")        
         
         
-    def msg_callback(self, status, message):
+    def handle_message(self, status, message):
         if message:
             self.msg = message
         
-        if (not self.display_status and status == MessageController.ON):
+        if (not self.display_status and status == MessageStatus.ON):
             return self.declare_message()
-        if(self.display_status and status == MessageController.OFF):
+        if(self.display_status and status == MessageStatus.OFF):
             return self.terminate_message()
 
     def terminate_message(self):
@@ -56,3 +55,4 @@ class MessageController:
                 display.show()
                 sleep(0.1)
             self.baton.release()
+

@@ -2,3 +2,4 @@ node_modules
 package-lock.json
 dist
 deployment-steps.txt
+scratch.py
