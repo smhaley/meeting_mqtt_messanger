@@ -1,7 +1,8 @@
-import { ExportMessage } from "./MQTTHandler";
+import { ExportMessage } from "./services/MQTTClient";
 import { ToastTypes } from "./constants/toastTypes";
-import { showToast } from "./Toast";
+import { showToast } from "./components/Toast";
 import { MessageStatus } from "./constants/mqttTransfer";
+import ErrorBanner from "./components/ErrorBanner";
 
 interface AppState {
   messageValue: string;
@@ -12,11 +13,11 @@ export default class App {
   private state: AppState = { messageValue: "ON AIR!!", hasError: false };
   private mqttHandshake: () => void;
   private sendTimeoutDuration: number;
+  private dispatchMessage: (message?: string) => void;
 
   private inputElement: HTMLInputElement | null;
   private pubButton: HTMLButtonElement | null;
   private offButton: HTMLButtonElement | null;
-  private banner: HTMLElement | null;
   private toastBox: HTMLElement | null;
 
   private publishMessage: (
@@ -27,21 +28,26 @@ export default class App {
   constructor(
     publishMessage: (msg: ExportMessage, errorCallback?: () => void) => void,
     mqttHandshake: () => void,
-    sendTimeoutDuration: number
+    sendTimeoutDuration: number,
+    dispatchMessage: (message?: string) => void
   ) {
     this.publishMessage = publishMessage;
     this.mqttHandshake = mqttHandshake;
     this.sendTimeoutDuration = sendTimeoutDuration;
+    this.dispatchMessage = dispatchMessage;
 
     this.inputElement = document.getElementById(
       "messageInput"
     ) as HTMLInputElement;
     this.pubButton = document.getElementById("mqttPubOn") as HTMLButtonElement;
     this.offButton = document.getElementById("mqttPubOff") as HTMLButtonElement;
-    this.banner = document.getElementById("banner");
     this.toastBox = document.getElementById("toastBox");
     this.initializeHandlers();
   }
+
+  handleShowBanner = () => {
+    new ErrorBanner().showBanner();
+  };
 
   initializeHandlers = () => {
     window.addEventListener("load", () => {
@@ -55,6 +61,7 @@ export default class App {
       showToast("Publishing...", ToastTypes.PUBLISH, this.sendTimeoutDuration);
       this.handlePostSend();
       this.mqttHandshake();
+      this.dispatchMessage(this.state.messageValue.toUpperCase());
       this.publishMessage(
         {
           status: MessageStatus.ON,
@@ -65,13 +72,10 @@ export default class App {
     });
 
     this.offButton?.addEventListener("click", () => {
-      showToast(
-        "Cancelling...",
-        ToastTypes.CANCEL,
-        this.sendTimeoutDuration
-      );
+      showToast("Cancelling...", ToastTypes.CANCEL, this.sendTimeoutDuration);
       this.handlePostSend();
       this.mqttHandshake();
+      this.dispatchMessage(undefined);
       this.publishMessage(
         { status: MessageStatus.OFF },
         this.handleConnectionError
@@ -94,8 +98,7 @@ export default class App {
 
   public handleConnectionError = () => {
     this.state.hasError = true;
-    this.banner?.classList.remove("visuallyhidden");
-    this.banner?.classList.add("warning-banner");
+    this.handleShowBanner();
     this.toastBox?.classList.add("visuallyhidden");
     if (this.pubButton && this.offButton && this.inputElement) {
       this.pubButton.disabled = true;

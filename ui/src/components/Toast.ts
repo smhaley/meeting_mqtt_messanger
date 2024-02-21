@@ -1,4 +1,4 @@
-import { ToastTypes } from "./constants/toastTypes";
+import { ToastTypes } from "../constants/toastTypes";
 
 const toastBox = document.getElementById("toastBox");
 
