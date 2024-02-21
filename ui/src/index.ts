@@ -10,7 +10,7 @@ import "../public/app.css";
 const handshakeTimeout = Number(process.env.HANDSHAKE_TIMEOUT);
 const timeoutInterval = Number(process.env.TIMEOUT_INTERVAL_MINUTES);
 
-document.body.append(new Loader(handshakeTimeout));
+document.body.append(new Loader(handshakeTimeout + 500));
 
 const sharedStatusState = new SharedStatusState();
 const mqttClient = new MQTTClient(
