@@ -15,7 +15,7 @@ export default class CurrentMessageBanner extends HTMLElement {
     this.setAttribute("aria-hidden", (!this.visible).toString());
   };
 
-  private handleMessage = (e: any) => {
+  private handleMessage = (e: CustomEvent<{ message?: string }>) => {
     this.message = e.detail.message;
     this.visible = !!(this.message && this.message.length);
     this.updateVisibility();
@@ -29,11 +29,11 @@ export default class CurrentMessageBanner extends HTMLElement {
   };
 
   connectedCallback() {
-    document.addEventListener(CURRENT_MESSAGE_UPDATE, this.handleMessage);
+    document.addEventListener(CURRENT_MESSAGE_UPDATE, this.handleMessage as EventListener);
   }
 
   disconnectedCallback() {
-    document.removeEventListener(CURRENT_MESSAGE_UPDATE, this.handleMessage);
+    document.removeEventListener(CURRENT_MESSAGE_UPDATE, this.handleMessage as EventListener);
   }
 }
 
